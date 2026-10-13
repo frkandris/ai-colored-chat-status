@@ -78,7 +78,7 @@ Installation alone does not guarantee the skill is loaded on every turn. Each en
 
 ### Claude Code
 
-From the cloned repository:
+From the directory where you cloned the repository:
 
 ```bash
 mkdir -p ~/.claude/skills
