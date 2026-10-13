@@ -17,32 +17,13 @@ Chat Status is a small agent skill that adds a colored circle to your existing c
 
 ## Install with your agent
 
-Copy one of these prompts into your agent. It asks the agent to install the skill **and enable status tracking on every turn**. Your existing instructions should be preserved.
-
-### Tell Codex
+Paste this into **Codex desktop or Claude Code**:
 
 ```text
-Install the chat-status skill from https://github.com/frkandris/chat-status
-for my Codex desktop setup and enable it across my chats.
-Read the repository's README and Codex global activation guide, then follow
-those instructions. Preserve my existing skills and global instructions;
-update an existing installation without nesting or duplicating it.
-Verify the setup and tell me if I need to restart or reopen a chat.
+Install https://github.com/frkandris/chat-status and follow its setup guide to enable chat status tracking on every turn.
 ```
 
-### Tell Claude Code
-
-```text
-Install the chat-status skill from https://github.com/frkandris/chat-status
-for my local Claude Code setup and enable it on every turn.
-Read the repository's README and Claude Code setup guide, check the
-requirements, then follow those instructions. Preserve my existing skills
-and global instructions; update an existing installation without nesting
-or duplicating it. Verify the setup using this session's exact ID,
-preserve its descriptive title, and tell me if I need to restart.
-```
-
-The prompts configure the agent you paste them into. To use both platforms, run each prompt in its respective agent. Prefer installing by hand? Follow the [manual quick start](#quick-start) below.
+Use the same prompt in each agent if you want both. See the [manual setup](#quick-start) for details.
 
 ## Status colors
 
