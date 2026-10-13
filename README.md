@@ -1,4 +1,4 @@
-# Chat Status
+# AI Colored Chat Status
 
 **Know which Codex or Claude Code chat is working, waiting, scheduled, or done—at a glance.**
 
@@ -8,19 +8,16 @@
 
 Chat Status is a small agent skill that adds a colored circle to your existing chat title. It preserves the title you chose and updates the prefix as work progresses.
 
-```text
-🔵 Fix the checkout bug
-🟡 Review the deployment plan
-🟣 Monitor tomorrow's release
-🟢 Write the migration guide
-```
+![Illustrative chat list showing blue running, yellow needs input, purple scheduled, and green complete title prefixes](.github/assets/chat-status-preview.png)
+
+*Illustrative mockup. The skill adds the colored title prefix; the layout and explanatory status labels are examples.*
 
 ## Install with your agent
 
 Paste this into **Codex desktop or Claude Code**:
 
 ```text
-Install https://github.com/frkandris/chat-status and follow its setup guide to enable chat status tracking on every turn.
+Install https://github.com/frkandris/ai-colored-chat-status and follow its setup guide to enable chat status tracking on every turn.
 ```
 
 Use the same prompt in each agent if you want both. See the [manual setup](#quick-start) for details.
@@ -56,9 +53,9 @@ The Claude Code adapter was smoke-tested on **2.1.295**. Plain Claude web/Cowork
 Clone the repository and copy the skill into your user-level skills directory:
 
 ```bash
-git clone https://github.com/frkandris/chat-status.git
+git clone https://github.com/frkandris/ai-colored-chat-status.git
 mkdir -p ~/.agents/skills
-cp -R chat-status/chat-status ~/.agents/skills/
+cp -R ai-colored-chat-status/chat-status ~/.agents/skills/
 ```
 
 If you already have a `chat-status` installation, back it up or deliberately replace it rather than creating a nested duplicate. The repository root is the package; the inner `chat-status/` folder is the installable skill.
@@ -85,7 +82,7 @@ From the cloned repository:
 
 ```bash
 mkdir -p ~/.claude/skills
-cp -R chat-status/chat-status ~/.claude/skills/
+cp -R ai-colored-chat-status/chat-status ~/.claude/skills/
 ```
 
 Initialize a session name if needed, then invoke the skill:
@@ -121,7 +118,7 @@ The skill only changes chat titles. In Claude Code, the helper reads the exact s
 ## Repository layout
 
 ```text
-chat-status/
+ai-colored-chat-status/
 ├── README.md
 ├── LICENSE
 └── chat-status/
