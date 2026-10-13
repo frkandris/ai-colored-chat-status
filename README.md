@@ -10,8 +10,6 @@ Chat Status is a small agent skill that adds a colored circle to your existing c
 
 ![Illustrative chat list showing blue running, yellow needs input, purple scheduled, and green complete title prefixes](.github/assets/chat-status-preview.png)
 
-*Illustrative mockup. The skill adds the colored title prefix; the layout and explanatory status labels are examples.*
-
 ## Install with your agent
 
 Paste this into **Codex desktop or Claude Code**:
