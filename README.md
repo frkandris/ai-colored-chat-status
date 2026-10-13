@@ -8,7 +8,7 @@
 
 Chat Status is a small agent skill that adds a colored circle to your existing chat title. It preserves the title you chose and updates the prefix as work progresses.
 
-![Illustrative chat list showing blue running, yellow needs input, purple scheduled, and green complete title prefixes](.github/assets/chat-status-preview.png)
+![Claude Code in Claude Desktop with colored status circles in the chat sidebar](.github/assets/claude-code-desktop.png)
 
 ## Install with your agent
 
