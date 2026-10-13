@@ -1,12 +1,12 @@
 # Chat Status
 
-**Know which Codex chat is working, waiting, scheduled, or done—at a glance.**
+**Know which Codex or Claude Code chat is working, waiting, scheduled, or done—at a glance.**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Agent Skill](https://img.shields.io/badge/Agent-Skill-7c3aed)](chat-status/SKILL.md)
-[![Codex desktop](https://img.shields.io/badge/Works_with-Codex_desktop-111827)](#requirements)
+[![Platforms](https://img.shields.io/badge/Platforms-Codex_%7C_Claude_Code-111827)](#requirements)
 
-Chat Status is a small, instruction-only agent skill that adds a colored circle to your existing chat title. It preserves the title you chose and updates the prefix as work progresses.
+Chat Status is a small agent skill that adds a colored circle to your existing chat title. It preserves the title you chose and updates the prefix as work progresses.
 
 ```text
 🔵 Fix the checkout bug
@@ -28,15 +28,20 @@ A blocking dependency takes priority over active work. After a run ends, a verif
 
 ## Requirements
 
-- **Codex desktop**, with `mcp__codex_app__list_threads` and `mcp__codex_app__set_thread_title` available to the agent.
-- A local installation of this skill.
-- For status tracking on every turn, the persistent instruction described below.
+| Platform | Adapter | Requirements |
+| --- | --- | --- |
+| **Codex desktop** | Native desktop title tools | `mcp__codex_app__list_threads` and `mcp__codex_app__set_thread_title` |
+| **Claude Code (local)** | Bundled Python helper → documented `/rename` CLI command | Claude Code 2.1.295+, Python 3.9+, exact current session ID and persisted title |
 
-The instructions use the Agent Skills format, but renaming requires these Codex desktop tools. **Claude, Claude Code, and Codex CLI sessions without desktop title tools are not supported by this version.** There is no daemon, API key, browser extension, or runtime dependency.
+Install the same skill folder in either or both platforms. Enable the persistent instruction for lifecycle updates on every turn. No daemon, browser extension, or separate API key is required.
+
+The Claude Code adapter was smoke-tested on **2.1.295**. Plain Claude web/Cowork chats, remote-only Claude sessions, and Codex CLI sessions without desktop title tools are outside this release's scope.
 
 ## Quick start
 
-### 1. Install the skill
+### Codex desktop
+
+#### 1. Install the skill
 
 Clone the repository and copy the skill into your user-level skills directory:
 
@@ -50,7 +55,7 @@ If you already have a `chat-status` installation, back it up or deliberately rep
 
 Codex's [official skill documentation](https://learn.chatgpt.com/docs/build-skills) describes current discovery locations. Restart Codex if the skill does not appear.
 
-### 2. Try it in a chat
+#### 2. Try it in a chat
 
 ```text
 Use $chat-status during this task. Summarize the README in this repository.
@@ -58,29 +63,49 @@ Use $chat-status during this task. Summarize the README in this repository.
 
 The title should become 🔵 while the agent works, then 🟢 when it finishes. Explicit invocation applies to the current task; use global activation for ongoing tracking.
 
-### 3. Enable it for every turn
+#### 3. Enable it for every turn
 
 Follow the [global activation guide](chat-status/references/global-activation.md) to add a short instruction to your Codex home `AGENTS.md`. The guide includes the exact snippet, path resolution, precedence rules, verification, and removal steps.
 
 Installation alone does not guarantee the skill is loaded on every turn. Each enabled chat updates its own title as it runs.
 
+### Claude Code
+
+From the cloned repository:
+
+```bash
+mkdir -p ~/.claude/skills
+cp -R chat-status/chat-status ~/.claude/skills/
+```
+
+Initialize a session name if needed, then invoke the skill:
+
+```text
+/rename Fix the checkout bug
+/chat-status
+```
+
+See the [Claude Code guide](chat-status/references/claude-code.md) for requirements, the exact session adapter, global activation through `CLAUDE.md`, and troubleshooting. Installing in one platform does not install it in the other.
+
 ## How it works
 
-1. Read and identify the current chat's title through desktop tools.
+1. Read and identify the current chat's title through the appropriate platform adapter.
 2. Select a state from the actual task outcome and any verified schedule.
 3. Replace existing leading status circles with exactly one circle and one space.
 4. Preserve the descriptive title verbatim, including its language and other emoji.
 
 For example, `🟡 🔵 Fix checkout` becomes `🟢 Fix checkout` when the work is complete. A user rename is preserved on the next update. Subagents do not rename their parent's chat.
 
-The skill only changes chat titles. It does not create schedules, send notifications, or inspect external services merely to choose a color.
+The skill only changes chat titles. In Claude Code, the helper reads the exact session’s title metadata and calls the official CLI rename command; it does not write transcripts directly. It does not create schedules, send notifications, or inspect external services merely to choose a color.
 
 ## Limitations
 
 - Updates happen when the agent can act. This is **not real-time event synchronization**.
 - Crashes, forced interruptions, unexpected approval prompts, or schedule changes made elsewhere can leave a prefix stale until another turn.
 - If the current chat cannot be identified reliably, the skill leaves its title unchanged.
-- Missing desktop tools cannot be supplied by installing a Markdown skill.
+- Missing platform capabilities cannot be supplied by installing a Markdown skill.
+- Claude Code needs a resolvable local session and title. Unsupported versions, host restrictions, or missing title metadata cause the adapter to stop without guessing another session.
+- Claude Code may cache the visible title until the UI refreshes; saved-title verification does not prove immediate live UI refresh.
 - Global activation does not install or enable the skill on another person's computer.
 
 ## Repository layout
@@ -92,17 +117,20 @@ chat-status/
 └── chat-status/
     ├── SKILL.md                       # Agent instructions
     ├── agents/openai.yaml             # English UI metadata
-    └── references/global-activation.md
+    ├── references/
+    │   ├── global-activation.md         # Codex setup
+    │   └── claude-code.md               # Claude Code setup
+    └── scripts/claude_code_status.py    # Local Claude Code adapter
 ```
 
 ## Contributing
 
 Issues and focused pull requests are welcome. Describe the environment, the expected title, and the observed result. Use fictional examples or redact private chat content.
 
-Keep changes instruction-only unless a concrete capability requires code. Preserve the title, use verified state evidence, and avoid claiming support for tools the target environment does not expose. When changing lifecycle behavior, check active work, required input, completion, and a verified attached schedule.
+Keep platform adapters small and use supported interfaces. Preserve the title, use verified state evidence, and avoid claiming support for tools the target environment does not expose. When changing lifecycle behavior, check active work, required input, completion, and a verified attached schedule.
 
 ## Origin and license
 
-Created by [András Tóth](https://github.com/frkandris). This English edition is adapted from the `chat-status` skill in the STRT skills collection, source revision `3b0c4415280047249925da787cf33b9ee2689266` (2026-10-12). It retains the four-state lifecycle and title-preservation behavior, with English metadata and setup documentation.
+Created by [András Tóth](https://github.com/frkandris). This English edition is adapted from the `chat-status` skill in the STRT skills collection, source revision `3b0c4415280047249925da787cf33b9ee2689266` (2026-10-12). It retains the four-state lifecycle and title-preservation behavior, with English metadata and setup documentation. The Claude Code adapter adds a supported CLI path for the same lifecycle.
 
 Released under the [MIT License](LICENSE). This is an independent project and is not affiliated with or endorsed by OpenAI or Anthropic.

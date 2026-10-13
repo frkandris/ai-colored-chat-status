@@ -1,4 +1,4 @@
 interface:
   display_name: "Chat Status"
-  short_description: "Colored status circles for Codex desktop chat titles"
+  short_description: "Colored status circles for Codex and Claude Code titles"
   default_prompt: "Use $chat-status to update this chat's status circle while preserving its title."

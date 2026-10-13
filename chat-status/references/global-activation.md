@@ -1,5 +1,7 @@
 # Enable status tracking across Codex desktop chats
 
+For Claude Code, use the separate [Claude Code activation guide](claude-code.md).
+
 Installing the skill makes it discoverable. To request status updates on every root-agent turn, also add a persistent instruction to your Codex home `AGENTS.md` (normally `~/.codex/AGENTS.md`). Preserve existing instructions. If `CODEX_HOME` is set, use that directory instead.
 
 ## Setup
