@@ -47,15 +47,21 @@ The helper locates only the exact UUID's transcript, reads title metadata, strip
 
 It preserves runtime guards and permissions. It never uses `--continue`, removes nesting guards, launches a model prompt, or directly edits transcripts. If the host rejects the command or the session cannot be resolved, continue the main task and report the unavailable status update once. Do not guess another session.
 
+## Schedule evidence
+
+Use the host's documented schedule tools or confirmed schedule metadata for the exact session; do not infer a future run from a reminder in prose.
+
 ## Enable on every turn
 
-Append the following to `~/.claude/CLAUDE.md`, preserving existing instructions and replacing the path with the real installed location:
+Append the following to `~/.claude/CLAUDE.md`, preserving existing instructions:
 
 ```markdown
 ## Chat status
 
-The user has enabled chat-status tracking in Claude Code. In every root-agent turn, read and follow /absolute/path/chat-status/SKILL.md. Use the chat-status skill so Claude Code supplies its current session ID and skill directory. Update only the current session's status prefix and preserve its descriptive title. Subagents must not rename their parent's session. If the adapter is unavailable, continue the main task and report the limitation once.
+Prefix this chat's title with exactly one status circle and a space; keep the rest of the title and replace an existing circle. 🔵 working · 🟡 blocked on my answer or approval · 🟣 run ended, a confirmed automation on this chat will run again · 🟢 done. Priority 🟡 > 🔵 > 🟣 > 🟢. Set 🔵 at turn start and the final circle just before the last reply. Subagents never rename. Claude desktop app: use `get_session`/`set_session_title` with "self". Claude Code CLI: invoke the chat-status skill once per session for the rename command.
 ```
+
+The rules live in the instruction itself (about 550 characters), so the full skill is not loaded on every turn. In the CLI the skill is still needed once per session, because only a skill receives the `${CLAUDE_SESSION_ID}` substitution.
 
 This instruction requests lifecycle updates; it does not create an independent hook listener. Remove this section to disable persistent tracking. Existing prefixes remain until renamed.
 

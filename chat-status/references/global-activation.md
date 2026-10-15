@@ -4,6 +4,8 @@ For Claude Code, use the separate [Claude Code activation guide](claude-code.md)
 
 Installing the skill makes it discoverable. To request status updates on every root-agent turn, also add a persistent instruction to your Codex home `AGENTS.md` (normally `~/.codex/AGENTS.md`). Preserve existing instructions. If `CODEX_HOME` is set, use that directory instead.
 
+The instruction carries the rules itself (about 500 characters), so the full `SKILL.md` is not re-read on every turn. Global instructions sit at the start of every context window; keep them short.
+
 ## Setup
 
 1. Install the `chat-status` folder in a skill location recognized by your Codex installation. The current user-level location is `~/.agents/skills/chat-status`.
@@ -16,9 +18,9 @@ Installing the skill makes it discoverable. To request status updates on every r
 3. Append the following section to your Codex home `AGENTS.md`. Replace `<installed-skill-absolute-path>` with the output from step 2, including `/SKILL.md`.
 
    ```markdown
-   ## Codex desktop chat status
+   ## Chat status
 
-   The user has enabled chat-status tracking in all Codex desktop chats. In every root-agent turn, including scheduled turns, read and follow the chat-status SKILL.md at <installed-skill-absolute-path> when desktop thread-title tools are available. This authorizes updating the calling chat's status prefix without asking again; preserve the descriptive title. Subagents must not rename the parent chat.
+   Prefix this chat's title with exactly one status circle and a space; keep the rest of the title and replace an existing circle. 🔵 working · 🟡 blocked on my answer or approval · 🟣 run ended, a confirmed automation on this chat will run again · 🟢 done. Priority 🟡 > 🔵 > 🟣 > 🟢. Set 🔵 at turn start and the final circle just before the last reply. Subagents never rename. Rename with the desktop title tools; for an unclear chat, title, or schedule, read <installed-skill-absolute-path> once.
    ```
 
 4. If `AGENTS.override.md` exists in Codex home, it takes precedence over `AGENTS.md`. Add the section to the active instructions file while preserving its other contents.

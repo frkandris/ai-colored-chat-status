@@ -36,11 +36,18 @@ A blocking dependency takes priority over active work. After a run ends, a verif
 | Platform | Adapter | Requirements |
 | --- | --- | --- |
 | **Codex desktop** | Native desktop title tools | `mcp__codex_app__list_threads` and `mcp__codex_app__set_thread_title` |
-| **Claude Code (local)** | Bundled Python helper → documented `/rename` CLI command | Claude Code 2.1.295+, Python 3.9+, exact current session ID and persisted title |
+| **Claude desktop app (Code tab)** | Native session tools | `get_session` and `set_session_title` |
+| **Claude Code CLI (local)** | Bundled Python helper → documented `/rename` CLI command | Claude Code 2.1.295+, Python 3.9+, exact current session ID and persisted title |
 
 Install the same skill folder in either or both platforms. Enable the persistent instruction for lifecycle updates on every turn. No daemon, browser extension, or separate API key is required.
 
 The Claude Code adapter was smoke-tested on **2.1.295**. Plain Claude web/Cowork chats, remote-only Claude sessions, and Codex CLI sessions without desktop title tools are outside this release's scope.
+
+## Context cost
+
+The always-on part is a short global instruction of about 500 characters that carries the four states and the priority rule itself. The full `SKILL.md` (about 2,000 characters) is read only when needed: once per session in the Claude Code CLI to get the rename command, or when a chat, title, or schedule is unclear. Platform edge cases live in `references/` and are read on demand.
+
+Global instructions sit at the start of every context window, so they are kept deliberately short.
 
 ## Quick start
 
@@ -70,7 +77,7 @@ The title should become 🔵 while the agent works, then 🟢 when it finishes. 
 
 #### 3. Enable it for every turn
 
-Follow the [global activation guide](chat-status/references/global-activation.md) to add a short instruction to your Codex home `AGENTS.md`. The guide includes the exact snippet, path resolution, precedence rules, verification, and removal steps.
+Follow the [global activation guide](chat-status/references/global-activation.md) to add a short (~500 character) instruction to your Codex home `AGENTS.md`. The guide includes the exact snippet, path resolution, precedence rules, verification, and removal steps.
 
 Installation alone does not guarantee the skill is loaded on every turn. Each enabled chat updates its own title as it runs.
 
@@ -120,9 +127,10 @@ ai-colored-chat-status/
 ├── README.md
 ├── LICENSE
 └── chat-status/
-    ├── SKILL.md                       # Agent instructions
+    ├── SKILL.md                       # Agent instructions (short)
     ├── agents/openai.yaml             # English UI metadata
     ├── references/
+    │   ├── codex.md                     # Codex edge cases (read on demand)
     │   ├── global-activation.md         # Codex setup
     │   └── claude-code.md               # Claude Code setup
     └── scripts/claude_code_status.py    # Local Claude Code adapter
