@@ -1,10 +1,10 @@
 # Enable status tracking across Codex desktop chats
 
-For Claude Code, use the separate [Claude Code activation guide](claude-code.md).
+For Claude Code, use the separate [Claude Code activation guide](claude-code-setup.md).
 
 Installing the skill makes it discoverable. To request status updates on every root-agent turn, also add a persistent instruction to your Codex home `AGENTS.md` (normally `~/.codex/AGENTS.md`). Preserve existing instructions. If `CODEX_HOME` is set, use that directory instead.
 
-The instruction carries the rules itself (about 500 characters), so the full `SKILL.md` is not re-read on every turn. Global instructions sit at the start of every context window; keep them short.
+The instruction carries the rules itself (about 470 characters), so the full `SKILL.md` is not re-read on every turn. Global instructions sit at the start of every context window; keep them short.
 
 ## Setup
 
@@ -20,11 +20,11 @@ The instruction carries the rules itself (about 500 characters), so the full `SK
    ```markdown
    ## Chat status
 
-   Prefix this chat's title with exactly one status circle and a space; keep the rest of the title and replace an existing circle. 🔵 working · 🟡 blocked on my answer or approval · 🟣 run ended, a confirmed automation on this chat will run again · 🟢 done. Priority 🟡 > 🔵 > 🟣 > 🟢. Set 🔵 at turn start and the final circle just before the last reply. Subagents never rename. Rename with the desktop title tools; for an unclear chat, title, or schedule, read <installed-skill-absolute-path> once.
+   Title = one circle + space + existing title (replace any leading circle). 🔵 working · 🟠 blocked on my answer or approval · 🟣 ended, a confirmed automation on this chat reruns · 🟢 done. Priority 🟠>🔵>🟣>🟢. Rename only when the circle changes: final circle just before the last reply, 🔵 only for long or background work. Subagents never rename. Rename with the desktop title tools; for an unclear chat, title, or schedule, read <installed-skill-absolute-path> once.
    ```
 
 4. If `AGENTS.override.md` exists in Codex home, it takes precedence over `AGENTS.md`. Add the section to the active instructions file while preserving its other contents.
-5. Start a new chat, or reopen an existing chat if necessary, and ask for a short task. Confirm that the title shows 🔵 while working and 🟢 when finished. Ask a task requiring an answer to check 🟡. Test 🟣 only with a real, enabled automation attached to that chat.
+5. Start a new chat, or reopen an existing chat if necessary, and ask for a short task. Confirm that the title shows 🔵 while working and 🟢 when finished. Ask a task requiring an answer to check 🟠. Test 🟣 only with a real, enabled automation attached to that chat.
 
 Installing the skill or sharing its repository does not automatically configure other users' machines. Global activation means each chat updates its own title when it runs; it does not authorize bulk renaming of other chats.
 

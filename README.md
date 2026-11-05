@@ -25,9 +25,11 @@ Use the same prompt in each agent if you want both. See the [manual setup](#quic
 | Circle | Status | When it appears |
 | --- | --- | --- |
 | 🔵 | **Running** | The agent is actively working or waiting for a running tool. |
-| 🟡 | **Needs input** | Progress depends on your answer, approval, or access. |
+| 🟠 | **Needs input** | Progress depends on your answer, approval, or access. |
 | 🟣 | **Scheduled** | This run has ended and a confirmed, enabled future run is attached to this chat. |
 | 🟢 | **Complete** | The requested work is finished and no future run is attached. |
+
+Earlier versions used 🟡 for *Needs input*; old 🟡 prefixes are replaced on the next update.
 
 A blocking dependency takes priority over active work. After a run ends, a verified future schedule takes priority over completion. An idle or interrupted agent is not automatically marked complete.
 
@@ -45,9 +47,10 @@ The Claude Code adapter was smoke-tested on **2.1.295**. Plain Claude web/Cowork
 
 ## Context cost
 
-The always-on part is a short global instruction of about 500 characters that carries the four states and the priority rule itself. The full `SKILL.md` (about 2,000 characters) is read only when needed: once per session in the Claude Code CLI to get the rename command, or when a chat, title, or schedule is unclear. Platform edge cases live in `references/` and are read on demand.
-
-Global instructions sit at the start of every context window, so they are kept deliberately short.
+- **Always on:** a global instruction of about 470 characters that carries the four states and the priority rule, plus the skill's one-line description.
+- **Per turn:** usually one rename call, only when the circle changes. The current title is read only when it is not already known, and 🔵 is set only for long or background work. In the Claude Code CLI an optional `UserPromptSubmit` hook sets 🔵 with no model involvement.
+- **Once per session:** `SKILL.md` (about 1,800 characters), in the Claude Code CLI to get the rename command, or when a chat, title, or schedule is unclear.
+- **On demand:** platform edge cases in `references/`. Setup guides are read only during installation.
 
 ## Quick start
 
@@ -77,7 +80,7 @@ The title should become 🔵 while the agent works, then 🟢 when it finishes. 
 
 #### 3. Enable it for every turn
 
-Follow the [global activation guide](chat-status/references/global-activation.md) to add a short (~500 character) instruction to your Codex home `AGENTS.md`. The guide includes the exact snippet, path resolution, precedence rules, verification, and removal steps.
+Follow the [global activation guide](chat-status/references/global-activation.md) to add a short (~470 character) instruction to your Codex home `AGENTS.md`. The guide includes the exact snippet, path resolution, precedence rules, verification, and removal steps.
 
 Installation alone does not guarantee the skill is loaded on every turn. Each enabled chat updates its own title as it runs.
 
@@ -97,7 +100,7 @@ Initialize a session name if needed, then invoke the skill:
 /chat-status
 ```
 
-See the [Claude Code guide](chat-status/references/claude-code.md) for requirements, the exact session adapter, global activation through `CLAUDE.md`, and troubleshooting. Installing in one platform does not install it in the other.
+See the [Claude Code setup guide](chat-status/references/claude-code-setup.md) for requirements, global activation through `CLAUDE.md`, and the optional 🔵 hook. Troubleshooting is in the [adapter reference](chat-status/references/claude-code.md). Installing in one platform does not install it in the other.
 
 ## How it works
 
@@ -106,7 +109,7 @@ See the [Claude Code guide](chat-status/references/claude-code.md) for requireme
 3. Replace existing leading status circles with exactly one circle and one space.
 4. Preserve the descriptive title verbatim, including its language and other emoji.
 
-For example, `🟡 🔵 Fix checkout` becomes `🟢 Fix checkout` when the work is complete. A user rename is preserved on the next update. Subagents do not rename their parent's chat.
+For example, `🟠 🔵 Fix checkout` becomes `🟢 Fix checkout` when the work is complete. A user rename is preserved on the next update. Subagents do not rename their parent's chat.
 
 The skill only changes chat titles. In Claude Code, the helper reads the exact session’s title metadata and calls the official CLI rename command; it does not write transcripts directly. It does not create schedules, send notifications, or inspect external services merely to choose a color.
 
@@ -132,7 +135,8 @@ ai-colored-chat-status/
     ├── references/
     │   ├── codex.md                     # Codex edge cases (read on demand)
     │   ├── global-activation.md         # Codex setup
-    │   └── claude-code.md               # Claude Code setup
+    │   ├── claude-code-setup.md         # Claude Code setup and hook
+    │   └── claude-code.md               # Claude Code CLI troubleshooting (read on demand)
     └── scripts/claude_code_status.py    # Local Claude Code adapter
 ```
 
